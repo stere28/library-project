@@ -1,8 +1,11 @@
 package main;
 
+import main.comparatore.ComparatoreLibri;
+import main.filtri.Filtro;
+
 import java.util.List;
 
-public interface Libreria<T extends Filtro> extends Iterable<Libro>{
+public interface Libreria extends Iterable<Libro>{
     default int size(){
         int ret = 0;
         for(@SuppressWarnings("unused") Libro l: this){
@@ -14,5 +17,5 @@ public interface Libreria<T extends Filtro> extends Iterable<Libro>{
     void aggiungiLibro(Libro libro);
     void rimuoviLibro(Libro libro);
     void setOrdine(ComparatoreLibri comparatore);
-    void setFiltro(T filtro);
+    void setFiltro(Filtro filtro);
 }

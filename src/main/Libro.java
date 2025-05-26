@@ -1,7 +1,9 @@
 package main;
 
-public class Libro {
+import java.util.List;
+import java.util.Set;
 
+public class Libro {
     public enum Genere {
         ROMANZO,
         GIALLO,
@@ -18,20 +20,19 @@ public class Libro {
         THRILLER,
         ALTRO;
     }
-
     public enum Stato {
         LETTO,
         DA_LEGGERE,
         IN_CORSO;
     }
     private String titolo;
-    private String autore;
+    private Set<String> autori;
     private String isbn;
     private Genere genere;
     private int valutazione; // da 1 a 5
     private Stato stato;
 
-    public Libro(String titolo, String autore, String isbn, Genere genere, int valutazione, Stato stato) {
+    public Libro(String titolo, Set<String> autori, String isbn, Genere genere, int valutazione, Stato stato) {
         if (isbn == null || !(isValidIsbn10(isbn) || isValidIsbn13(isbn))) {
             throw new IllegalArgumentException("ISBN non valido: deve essere ISBN-10 o ISBN-13");
         }
@@ -39,7 +40,7 @@ public class Libro {
             throw new IllegalArgumentException("Valutazione deve essere compresa tra 1 e 5");
         }
         this.titolo = titolo;
-        this.autore = autore;
+        this.autori = Set.copyOf(autori);
         this.isbn = isbn;
         this.genere = genere;
         this.valutazione = valutazione;
@@ -67,8 +68,8 @@ public class Libro {
     public String getTitolo() {
         return titolo;
     }
-    public String getAutore() {
-        return autore;
+    public Set<String> getAutori() {
+        return Set.copyOf(autori);
     }
     public String getIsbn() {
         return isbn;
@@ -86,6 +87,26 @@ public class Libro {
         this.stato = stato;
     }
 
+//    public static Libro fromCSV(String line) {
+//        String[] parts = line.split(",");
+//        if (parts.length != 6) { //NON PENSO SIA NECESSARIO IN QUANTO SIAMO NOI A SCRIVERE SUL FILE
+//            throw new IllegalArgumentException("Formato CSV non valido: " + line);
+//        }
+//        return new Libro(parts[0], parts[1], Boolean.parseBoolean(parts[2]));
+//    }
+//
+//    public static String toCSV(Libro libro) {
+//
+//        return String.join(",",
+//                libro.getTitolo(),
+//                libro.getAutore(),
+//                libro.getIsbn(),
+//                libro.getGenere().toString(),
+//                String.valueOf(libro.getValutazione()),
+//                libro.getStato().toString()
+//        );
+//    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -101,7 +122,7 @@ public class Libro {
     public String toString() {
         return "LibroImpl{" +
                 "titolo='" + titolo + '\'' +
-                ", autore='" + autore + '\'' +
+                ", autore='" + autori + '\'' +
                 ", isbn='" + isbn + '\'' +
                 ", genere=" + genere +
                 ", valutazione=" + valutazione +
@@ -109,5 +130,3 @@ public class Libro {
                 '}';
     }
 }
-
-
