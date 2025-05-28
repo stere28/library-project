@@ -3,8 +3,12 @@ package main.filtri;
 import main.Libro;
 
 public class FiltroGenere implements Filtro{
+    private Libro.Genere genere;
+    protected FiltroGenere(Libro.Genere genere){
+        this.genere = genere;
+    }
     @Override
     public boolean test(Libro libro) {
-        return false;
+        return libro.getGenere() == genere;
     }
 }

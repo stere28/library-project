@@ -2,41 +2,45 @@ package main.filtri;
 
 import main.Libro;
 
-import java.util.Set;
-
-public class BuildFiltroPredicato implements BuildFiltro{
+public class BuildFiltroPredicato implements BuildFiltro { //TODO gestire le eccezioni
     private Filtro filtro;
-    public BuildFiltroPredicato(){
+
+    public BuildFiltroPredicato() {
         filtro = new NessunFiltro();
     }
 
     @Override
-    public void addPerGenere(Set<Libro.Genere> genere) {
-        //TODO
+    public void addPerGenere(Libro.Genere genere) {
+        Filtro filtroGenere = new FiltroGenere(genere);
+        filtro = (Filtro) filtroGenere.and(filtro);
     }
 
     @Override
-    public void addPerStato(Set<Libro.Stato> stato) {
-        //TODO
+    public void addPerStato(Libro.Stato stato) {
+        Filtro filtroStato = new FiltroStato(stato);
+        filtro = (Filtro) filtroStato.and(filtro);
     }
 
     @Override
     public void addPerAutore(String autore) {
-        //TODO
+        Filtro filtroAutore = new FiltroTitoloAutore(autore);
+        filtro = (Filtro) filtroAutore.and(filtro);
     }
 
     @Override
     public void addPerTitolo(String titolo) {
-        //TODO
+        Filtro filtroTitolo = new FiltroTitoloAutore(titolo);
+        filtro = (Filtro) filtroTitolo.and(filtro);
     }
 
     @Override
     public void addPerValutazione(int min, int max) {
-        //TODO
+        Filtro filtroValutazione = new FiltroValutazione(min, max);
+        filtro = (Filtro) filtroValutazione.and(filtro);
     }
 
     @Override
     public Filtro getFiltro() {
-        return null; //TODO
+        return filtro;
     }
 }
