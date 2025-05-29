@@ -33,7 +33,10 @@ public class Libro {
     private Stato stato;
 
     public Libro(String titolo, Set<String> autori, String isbn, Genere genere, int valutazione, Stato stato) {
-        if (isbn == null || !(isValidIsbn10(isbn) || isValidIsbn13(isbn))) {
+        if (titolo.isEmpty() || autori.isEmpty()) {
+            throw  new IllegalArgumentException("Compila tutti i campi obbligatori.");
+        }
+        if (isbn.isEmpty() || !(isValidIsbn10(isbn) || isValidIsbn13(isbn))) {
             throw new IllegalArgumentException("ISBN non valido: deve essere ISBN-10 o ISBN-13");
         }
         if (valutazione < 1 || valutazione > 5) {

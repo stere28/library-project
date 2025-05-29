@@ -18,4 +18,5 @@ public interface Libreria extends Iterable<Libro>{
     void rimuoviLibro(Libro libro);
     void setOrdine(ComparatoreLibri comparatore);
     void setFiltro(Filtro filtro);
+
 }
