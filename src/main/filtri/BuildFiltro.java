@@ -7,8 +7,7 @@ import java.util.Set;
 public interface BuildFiltro {
     void addPerGenere(Libro.Genere genere);
     void addPerStato(Libro.Stato stato);
-    void addPerAutore(String autore);
-    void addPerTitolo(String titolo);
+    public void addPerText(String text);
     void addPerValutazione(int min, int max);
     Filtro getFiltro();
 }

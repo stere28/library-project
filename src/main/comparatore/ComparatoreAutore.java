@@ -3,7 +3,7 @@ package main.comparatore;
 import java.util.*;
 import main.Libro;
 
-public class ComparatoreAutore implements Comparator<Libro> {
+public class ComparatoreAutore implements ComparatoreLibri {
     @Override
     public int compare(Libro o1, Libro o2) {
         String primoAutore1 = getPrimoAutoreOrDefault(o1.getAutori());

@@ -17,7 +17,7 @@ public class LibreriaConcreta implements Libreria{
     private Filtro filtro = new NessunFiltro();
 
     public LibreriaConcreta(){
-        implementazione = new LibreriaJSON();
+        implementazione = LibreriaJSON.INSTANCE;
     }
     @Override
     public List<Libro> getLibri() {

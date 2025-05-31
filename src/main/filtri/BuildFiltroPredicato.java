@@ -8,35 +8,32 @@ public class BuildFiltroPredicato implements BuildFiltro { //TODO gestire le ecc
     public BuildFiltroPredicato() {
         filtro = new NessunFiltro();
     }
+    public BuildFiltroPredicato(Filtro filtro){
+        this.filtro = filtro;
+    }
 
     @Override
     public void addPerGenere(Libro.Genere genere) {
         Filtro filtroGenere = new FiltroGenere(genere);
-        filtro = (Filtro) filtroGenere.and(filtro);
+        filtro =  filtroGenere.and(filtro);
     }
 
     @Override
     public void addPerStato(Libro.Stato stato) {
         Filtro filtroStato = new FiltroStato(stato);
-        filtro = (Filtro) filtroStato.and(filtro);
+        filtro = filtroStato.and(filtro);
     }
 
     @Override
-    public void addPerAutore(String autore) {
-        Filtro filtroAutore = new FiltroTitoloAutore(autore);
-        filtro = (Filtro) filtroAutore.and(filtro);
-    }
-
-    @Override
-    public void addPerTitolo(String titolo) {
-        Filtro filtroTitolo = new FiltroTitoloAutore(titolo);
-        filtro = (Filtro) filtroTitolo.and(filtro);
+    public void addPerText(String text) {
+        Filtro filtroText = new FiltroTitoloAutore(text);
+        filtro = filtroText.and(filtro);
     }
 
     @Override
     public void addPerValutazione(int min, int max) {
         Filtro filtroValutazione = new FiltroValutazione(min, max);
-        filtro = (Filtro) filtroValutazione.and(filtro);
+        filtro = filtroValutazione.and(filtro);
     }
 
     @Override
