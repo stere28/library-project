@@ -16,7 +16,6 @@ import java.util.*;
 
 public enum LibreriaJSON implements LibreriaPersistente {
     INSTANCE;
-
     private static final String FILE_PATH = "libri.json";
     private final Set<Libro> cache;
     private final Gson gson;
@@ -27,7 +26,7 @@ public enum LibreriaJSON implements LibreriaPersistente {
         cache = caricaPersistenti();
     }
 
-    private Set<Libro> caricaPersistenti() {
+    private  Set<Libro> caricaPersistenti() {
         try (FileReader reader = new FileReader(FILE_PATH)) {
             Type listType = new TypeToken<List<Libro>>() {}.getType();
             List<Libro> libri = gson.fromJson(reader, listType);
@@ -38,13 +37,13 @@ public enum LibreriaJSON implements LibreriaPersistente {
     }
 
     @Override
-    public void salvaLibro(Libro libro) {
+    public synchronized void salvaLibro(Libro libro) {
         cache.add(libro);
         salvaSuDisco();
     }
 
     @Override
-    public void rimuoviLibro(Libro libro) {
+    public synchronized void rimuoviLibro(Libro libro) {
         cache.remove(libro);
         salvaSuDisco();
     }
@@ -58,7 +57,7 @@ public enum LibreriaJSON implements LibreriaPersistente {
     }
 
     @Override
-    public List<Libro> caricaLibreria(Filtro filtro, ComparatoreLibri comparatore) {
+    public synchronized List<Libro> caricaLibreria(Filtro filtro, ComparatoreLibri comparatore) {
         return cache.stream()
                 .filter(filtro)
                 .sorted(comparatore)

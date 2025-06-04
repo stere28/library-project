@@ -3,7 +3,6 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 target/
-.json
 
 ### Eclipse ###
 .apt_generated
@@ -29,3 +28,4 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+libri.json

@@ -16,8 +16,8 @@ public class LibreriaConcreta implements Libreria{
     private ComparatoreLibri comparatore = new ComparatoreTitolo();
     private Filtro filtro = new NessunFiltro();
 
-    public LibreriaConcreta(){
-        implementazione = LibreriaJSON.INSTANCE;
+    public LibreriaConcreta(LibreriaPersistente implementazione){
+        this.implementazione = implementazione;
     }
     @Override
     public List<Libro> getLibri() {

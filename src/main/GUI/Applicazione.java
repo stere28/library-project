@@ -32,7 +32,7 @@ public class Applicazione extends JFrame {
         setLayout(new BorderLayout());
         setVisible(true);
 
-        this.libreria = new LibreriaConcreta();
+        this.libreria = new LibreriaConcreta(LibreriaJSON.INSTANCE);
         this.handler = new HistoryCommandHandler();
 
         //BARRA INFERIORE
@@ -44,25 +44,24 @@ public class Applicazione extends JFrame {
         barraInferiore.add(undoButt);
         barraInferiore.add(redoButt);
 
-        undoButt.addActionListener(evt -> handler.undo());
-        redoButt.addActionListener(evt -> handler.redo());
         addBook.addActionListener(e -> new AddBookDialog(this, handler, libreria));
+        undoButt.addActionListener(handler);
+        redoButt.addActionListener(handler);
+
 
         //RICERCA
         campiDiRicerca = new Search(this,libreria);
 
         //VISTA LIBRI
         bookListPanel = new JList<>();
-        bookListPanel.setCellRenderer(new ListCellRenderer<Libro>() {
-            @Override
-            public Component getListCellRendererComponent(JList<? extends Libro> list, Libro value, int index, boolean isSelected, boolean cellHasFocus) {
-                JLabel label = new JLabel(value.getTitolo() + " - " + String.join(", ", value.getAutori()));
-                if (isSelected) {
-                    label.setBackground(list.getSelectionBackground());
-                    label.setForeground(list.getSelectionForeground());
-                    label.setOpaque(true);
-                }
-                return label;
+        bookListPanel.setCellRenderer(new BookCellRenderer());
+        bookListPanel.setFixedCellHeight(70);
+
+        bookListPanel.addListSelectionListener(e -> {
+            boolean hasSelection = !bookListPanel.isSelectionEmpty();
+            if(hasSelection) {
+                Libro selected = bookListPanel.getSelectedValue();
+                new BookDetailDialog(this, handler, libreria, selected);
             }
         });
 
@@ -71,10 +70,50 @@ public class Applicazione extends JFrame {
         add(barraInferiore, BorderLayout.PAGE_END);
         add(bookListPanel,BorderLayout.CENTER);
 
-
         aggiornaListaLibri();
     }
 
+
+    class BookCellRenderer extends JPanel implements ListCellRenderer<Libro> {
+        private final JLabel titleLabel = new JLabel();
+        private final JLabel authorLabel = new JLabel();
+        private final JLabel yearLabel = new JLabel();
+
+        public BookCellRenderer() {
+            setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+            setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+
+            titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD, 14f));
+            authorLabel.setFont(authorLabel.getFont().deriveFont(Font.PLAIN, 12f));
+            yearLabel.setFont(yearLabel.getFont().deriveFont(Font.ITALIC, 11f));
+            yearLabel.setForeground(Color.GRAY);
+
+            add(titleLabel);
+            add(authorLabel);
+            add(yearLabel);
+        }
+
+        @Override
+        public Component getListCellRendererComponent(JList<? extends Libro> list, Libro libro,
+                                                      int index, boolean isSelected, boolean cellHasFocus) {
+
+            titleLabel.setText(libro.getTitolo());
+            authorLabel.setText("Autori: " + String.join(", ", libro.getAutori()));
+            yearLabel.setText("Valutazione: " + libro.getValutazione()+ " | Genere: " + libro.getGenere()
+                    + " | Stato: " + libro.getStato() + " | ISBN: " + libro.getIsbn());
+
+            if (isSelected) {
+                setBackground(list.getSelectionBackground());
+                setForeground(list.getSelectionForeground());
+            } else {
+                setBackground(list.getBackground());
+                setForeground(list.getForeground());
+            }
+
+            setOpaque(true);
+            return this;
+        }
+    }
 
     public void aggiornaListaLibri() {
         DefaultListModel<Libro> model = new DefaultListModel<>();

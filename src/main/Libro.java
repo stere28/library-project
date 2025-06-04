@@ -39,11 +39,11 @@ public class Libro implements Serializable {
         IN_CORSO;
     }
 
-    private String titolo;
-    private Set<String> autori;
-    private String isbn;
-    private Genere genere;
-    private int valutazione; // da 1 a 5
+    private final String titolo;
+    private final Set<String> autori;
+    private final String isbn;
+    private final Genere genere;
+    private final int valutazione; // da 1 a 5
     private Stato stato;
 
     /**
@@ -61,9 +61,9 @@ public class Libro implements Serializable {
         if (titolo == null || titolo.isEmpty() || autori == null || autori.isEmpty()) {
             throw new IllegalArgumentException("Compila tutti i campi obbligatori.");
         }
-//        if (isbn == null || isbn.isEmpty() || !(isValidIsbn10(isbn) || isValidIsbn13(isbn))) {
-//            throw new IllegalArgumentException("ISBN non valido: deve essere ISBN-10 o ISBN-13");
-//        } //TODO riaggiungere tolto per comodita
+        if (isbn == null || isbn.isEmpty() || !(isValidIsbn10(isbn) || isValidIsbn13(isbn))) {
+            throw new IllegalArgumentException("ISBN non valido: deve essere ISBN-10 o ISBN-13");
+        } //TODO riaggiungere tolto per comodita
         if (valutazione < 1 || valutazione > 5) {
             throw new IllegalArgumentException("Valutazione deve essere compresa tra 1 e 5");
         }
@@ -73,6 +73,10 @@ public class Libro implements Serializable {
         this.genere = genere;
         this.valutazione = valutazione;
         this.stato = stato;
+    }
+
+    public Libro(Libro libro) {
+        this(libro.titolo, libro.autori,libro.isbn,libro.genere, libro.valutazione, libro.getStato());
     }
 
     /**

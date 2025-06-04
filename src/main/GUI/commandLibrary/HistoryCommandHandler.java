@@ -1,8 +1,10 @@
 package main.GUI.commandLibrary;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.LinkedList;
 
-public class HistoryCommandHandler implements CommandHandler {
+public class HistoryCommandHandler implements CommandHandler, ActionListener {
 
 	private int maxHistoryLength = 100;
 
@@ -59,4 +61,17 @@ public class HistoryCommandHandler implements CommandHandler {
 
 	}
 
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		String comando = e.getActionCommand();
+		switch (comando) {
+			case "<-":
+				System.out.println("ciao");
+				undo();
+				break;
+			case "->":
+				redo();
+				break;
+		}
+	}
 }
