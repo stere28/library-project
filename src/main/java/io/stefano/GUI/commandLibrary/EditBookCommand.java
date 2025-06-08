@@ -21,7 +21,7 @@ public class EditBookCommand implements Command{
     public boolean doIt() {
         libreria.rimuoviLibro(libroOriginale);
         libreria.aggiungiLibro(libroNuovo);
-        new ReloadCommand(applicazione).doIt();
+        new CaricaLibreriaCommand(applicazione,libreria).doIt();
         return true;
     }
 
@@ -29,7 +29,7 @@ public class EditBookCommand implements Command{
     public boolean undoIt() {
         libreria.rimuoviLibro(libroNuovo);
         libreria.aggiungiLibro(libroOriginale);
-        new ReloadCommand(applicazione).doIt();
+        new CaricaLibreriaCommand(applicazione,libreria).doIt();
         return true;
     }
 }

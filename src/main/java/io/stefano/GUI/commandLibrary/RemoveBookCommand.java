@@ -19,14 +19,14 @@ public class RemoveBookCommand implements Command {
     @Override
     public boolean doIt() {
         libreria.rimuoviLibro(libro);
-        new ReloadCommand(applicazione).doIt();
+        new CaricaLibreriaCommand(applicazione,libreria).doIt();
         return true; // Operazione annullabile
     }
 
     @Override
     public boolean undoIt() {
         libreria.aggiungiLibro(libro);
-        new ReloadCommand(applicazione).doIt();
+        new CaricaLibreriaCommand(applicazione,libreria).doIt();
         return true;
     }
 }

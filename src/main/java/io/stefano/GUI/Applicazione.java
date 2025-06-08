@@ -1,8 +1,8 @@
 package io.stefano.GUI;
 
+import io.stefano.GUI.commandLibrary.CaricaLibreriaCommand;
 import io.stefano.GUI.commandLibrary.HistoryCommandHandler;
 import io.stefano.GUI.commandLibrary.NaiveCommandHandler;
-import io.stefano.GUI.commandLibrary.ReloadCommand;
 import io.stefano.LibreriaConcreta;
 import io.stefano.Libro;
 import io.stefano.Libreria;
@@ -10,6 +10,7 @@ import io.stefano.implementazioni.LibreriaJSON;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 public final class Applicazione extends JFrame {
     private final Libreria libreria;
@@ -18,6 +19,7 @@ public final class Applicazione extends JFrame {
     private final JPanel campiDiRicerca;
     private final BarraInferiore barraInferiore;
     private final JList<Libro> bookListPanel;
+    DefaultListModel<Libro> model = new DefaultListModel<>();
 
 
     public static void main(String[] args) {
@@ -47,10 +49,8 @@ public final class Applicazione extends JFrame {
         bookListPanel.setCellRenderer(new BookCellRenderer());
         bookListPanel.setFixedCellHeight(70);
 
-        DefaultListModel<Libro> model = new DefaultListModel<>();
-        for (Libro libro : libreria.getLibri()) { //TODO rimuovere il riferimento alla libreria
-            model.addElement(libro);
-        }
+        naiveCommandHandler.handle(new CaricaLibreriaCommand(this,libreria));
+
         bookListPanel.setModel(model);
 
         bookListPanel.addListSelectionListener(e -> {
@@ -84,7 +84,7 @@ public final class Applicazione extends JFrame {
             addBook.addActionListener(e -> new AddBookDialog(Applicazione.this, historyCommandHandler, libreria));
             undoButt.addActionListener(historyCommandHandler);
             redoButt.addActionListener(historyCommandHandler);
-            reload.addActionListener(e -> {naiveCommandHandler.handle(new ReloadCommand(Applicazione.this));});
+            reload.addActionListener(e -> {naiveCommandHandler.handle(new CaricaLibreriaCommand(Applicazione.this,libreria));});
         }
     }
     private class BookCellRenderer extends JPanel implements ListCellRenderer<Libro> {
@@ -128,18 +128,9 @@ public final class Applicazione extends JFrame {
         }
     }
 
-    public void aggiornaListaLibri() {
-        DefaultListModel<Libro> model;
-
-        if (bookListPanel.getModel() instanceof DefaultListModel) {
-            model = (DefaultListModel<Libro>) bookListPanel.getModel();
-            model.clear(); // Pulisce solo gli elementi
-        } else {
-            model = new DefaultListModel<>();
-            bookListPanel.setModel(model);
-        }
-
-        for (Libro libro : libreria.getLibri()) {
+    public void aggiornaListaLibri(List<Libro> libri) {
+        model.clear(); // Pulisce solo gli elementi
+        for (Libro libro : libri) {
             model.addElement(libro);
         }
     }
