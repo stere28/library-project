@@ -18,14 +18,14 @@ public class AddBookCommand implements Command {
     @Override
     public boolean doIt() {
         libreria.aggiungiLibro(libro);
-        new ReloadCommand(app).doIt();
+        new CaricaLibreriaCommand(app,libreria).doIt();
         return true; // Operazione annullabile
     }
 
     @Override
     public boolean undoIt() {
         libreria.rimuoviLibro(libro);
-        new ReloadCommand(app).doIt();
+        new CaricaLibreriaCommand(app,libreria).doIt();
         return true;
     }
 }

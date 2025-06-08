@@ -27,7 +27,7 @@ public class SearchBookCommand implements Command{
         else {
             libreria.setOrdine(comparatore);
         }
-        new ReloadCommand(app).doIt();
+        new CaricaLibreriaCommand(app,libreria).doIt();
         return false;
     }
 

@@ -1,22 +1,25 @@
 package io.stefano.GUI.commandLibrary;
 
 import io.stefano.GUI.Applicazione;
+import io.stefano.Libreria;
 
 /**
  * Comando che aggiorna la vista dei libri (JList) nella GUI.
  * Non è annullabile.
  */
-public class ReloadCommand implements Command {
+public class CaricaLibreriaCommand implements Command {
 
     private final Applicazione applicazione;
+    private final Libreria libreria;
 
-    public ReloadCommand(Applicazione applicazione) {
+    public CaricaLibreriaCommand(Applicazione applicazione, Libreria libreria) {
         this.applicazione = applicazione;
+        this.libreria = libreria;
     }
 
     @Override
     public boolean doIt() {
-        applicazione.aggiornaListaLibri();
+        applicazione.aggiornaListaLibri(libreria.getLibri());
         return false;
     }
 
