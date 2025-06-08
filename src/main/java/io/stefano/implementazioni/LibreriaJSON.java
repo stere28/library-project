@@ -56,6 +56,8 @@ public enum LibreriaJSON implements LibreriaPersistente {
         try (FileReader reader = new FileReader(FILE_PATH)) {
             Type listType = new TypeToken<List<Libro>>() {}.getType();
             List<Libro> libri = gson.fromJson(reader, listType);
+            //TODO deserializza senza controllarne la validita
+            //non è un problema in quanto siamo noi a salvare i libri e di conseguenza sappiamo che sono corretti
             return libri != null ? new HashSet<>(libri) : new HashSet<>();
         } catch (IOException e) {
             return new HashSet<>();

@@ -16,12 +16,12 @@ public class BookDetailDialog extends JDialog {
     private final HistoryCommandHandler handler;
     private final Libro libroOriginale;
 
-    private JTextField titoloField;
-    private JTextField autoriField;
-    private JTextField isbnField;
-    private JComboBox<Integer> valutazioneCombo;
-    private JComboBox<Libro.Genere> genereCombo;
-    private JComboBox<Libro.Stato> statoCombo;
+    private final JTextField titoloField;
+    private final JTextField autoriField;
+    private final JTextField isbnField;
+    private final JComboBox<Integer> valutazioneCombo;
+    private final JComboBox<Libro.Genere> genereCombo;
+    private final JComboBox<Libro.Stato> statoCombo;
 
     public BookDetailDialog(Applicazione applicazione, HistoryCommandHandler handler, Libreria libreria, Libro libro) {
         super(applicazione, "Dettagli Libro", true);
@@ -91,14 +91,16 @@ public class BookDetailDialog extends JDialog {
                     autori.add(nomePulito);
                 }
             }
-            Libro libroModificato = new Libro(
-                                titoloField.getText(),
-                                autori,
-                                isbnField.getText(),
-                                (Libro.Genere) genereCombo.getSelectedItem(),
-                                (int) valutazioneCombo.getSelectedItem(),
-                                (Libro.Stato) statoCombo.getSelectedItem());
-            handler.handle(new EditBookCommand(applicazione,libreria,libroOriginale,libroModificato));
+            try {
+                Libro libroModificato = new Libro(titoloField.getText(), autori, isbnField.getText(),
+                        (Libro.Genere) genereCombo.getSelectedItem(),
+                        (int) valutazioneCombo.getSelectedItem(),
+                        (Libro.Stato) statoCombo.getSelectedItem());
+                handler.handle(new EditBookCommand(applicazione,libreria,libroOriginale,libroModificato));
+            }catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Errore di validazione", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             dispose();
         });
         deleteButton.addActionListener(e -> {

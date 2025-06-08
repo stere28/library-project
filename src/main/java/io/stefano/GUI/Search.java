@@ -9,6 +9,7 @@ import io.stefano.comparatore.ComparatoreAutore;
 import io.stefano.comparatore.ComparatoreLibri;
 import io.stefano.comparatore.ComparatoreTitolo;
 import io.stefano.comparatore.ComparatoreValutazione;
+import io.stefano.filtri.BuildFiltro;
 import io.stefano.filtri.BuildFiltroPredicato;
 import io.stefano.filtri.Filtro;
 
@@ -16,9 +17,9 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Search extends JPanel {
-    private CommandHandler handler;
-    private Applicazione app;
-    private Libreria libreria;
+    private final CommandHandler handler;
+    private final Applicazione app;
+    private final Libreria libreria;
     private Filtro filtro = new BuildFiltroPredicato().getFiltro();
     private ComparatoreLibri comparatore = new ComparatoreTitolo();
     private boolean reverse = false;
@@ -31,12 +32,14 @@ public class Search extends JPanel {
 
     public Search(Applicazione app, Libreria libreria) {
         super();
-        this.handler = handler;
+
+        handler = new NaiveCommandHandler();
         this.app = app;
         this.libreria = libreria;
+
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        handler = new NaiveCommandHandler();
+
 
         // Pannello superiore
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -63,11 +66,13 @@ public class Search extends JPanel {
 
         // Gestione eventi
         searchButton.addActionListener((e)->{
-            BuildFiltroPredicato builder = new BuildFiltroPredicato();
-            builder.addPerText(searchField.getText().trim());
+            BuildFiltro builder = new BuildFiltroPredicato();
+            String searchText = searchField.getText().trim();
+            if(!searchText.equals("")) builder.addPerText(searchText);
             filtro = builder.getFiltro();
             handler.handle(new SearchBookCommand(libreria, app, filtro, comparatore, reverse));
          });
+
         ordinamentoCombo.addActionListener((e)->{
             switch ((String) ordinamentoCombo.getSelectedItem()) {
                 case "Titolo":
@@ -80,7 +85,7 @@ public class Search extends JPanel {
                     comparatore = new ComparatoreValutazione();
                     break;
                 default:
-                    comparatore = new ComparatoreTitolo(); // Default per sicurezza
+                    comparatore = new ComparatoreTitolo();
             }
             if(reverse) comparatore = comparatore.reversed();
             handler.handle(new SearchBookCommand(libreria, app, filtro, comparatore, reverse));
@@ -138,7 +143,7 @@ public class Search extends JPanel {
         applica.addActionListener(e -> {
             // Imposta i filtri solo se attivi
 
-            BuildFiltroPredicato builder = new BuildFiltroPredicato(filtro); //TODO attenzione al fatto che potrebbero essere impostati piu filtri
+            BuildFiltroPredicato builder = new BuildFiltroPredicato(filtro);
             if(filtroGenereCheck.isSelected()){
                 builder.addPerGenere((Libro.Genere)genereBox.getSelectedItem());
             }
@@ -148,9 +153,9 @@ public class Search extends JPanel {
             if (filtroValutazioneCheck.isSelected()) {
                 builder.addPerValutazione((Integer) valutazioneMin.getValue(), (Integer) valutazioneMax.getValue());
             }
-            filtro = builder.getFiltro();
+
             filtriDialog.dispose();
-            handler.handle(new SearchBookCommand(libreria, app, filtro,comparatore,reverse));
+            handler.handle(new SearchBookCommand(libreria, app, builder.getFiltro(),comparatore,reverse));
         });
 
         filtriDialog.add(new JLabel()); // spazio vuoto

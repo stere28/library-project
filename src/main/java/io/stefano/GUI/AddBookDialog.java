@@ -12,16 +12,16 @@ import java.awt.event.ActionListener;
 import java.util.HashSet;
 import java.util.Set;
 
-public class AddBookDialog extends JDialog implements ActionListener {
+public final class AddBookDialog extends JDialog implements ActionListener {
     private JTextField isbnField;
     private JTextField titoloField;
     private JTextField autoriField;
-    private JComboBox<Libro.Genere> genereCombo;
-    private JSpinner valutazioneSpinner;
-    private JComboBox<Libro.Stato> statoCombo;
-    private CommandHandler hadler;
-    private Libreria libreria ;
-    private Applicazione app;
+    private final JComboBox<Libro.Genere> genereCombo;
+    private final JSpinner valutazioneSpinner;
+    private final JComboBox<Libro.Stato> statoCombo;
+    private final CommandHandler hadler;
+    private final Libreria libreria ;
+    private final Applicazione app;
     public AddBookDialog(Applicazione app, CommandHandler handler, Libreria libreria){
 
         super(app,"Aggiungi Nuovo Libro");
@@ -85,9 +85,7 @@ public class AddBookDialog extends JDialog implements ActionListener {
         }
 
         hadler.handle(new AddBookCommand(libreria, nuovoLibro, app));
-
-        System.out.println("Nuovo libro creato: " + nuovoLibro);
-        dispose(); // Chiude il dialog
+        dispose();
     }
 
 
