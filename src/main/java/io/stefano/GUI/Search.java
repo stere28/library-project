@@ -141,6 +141,8 @@ public class Search extends JPanel {
         // Pulsante applica
         JButton applica = new JButton("Applica Filtro");
         applica.addActionListener(e -> {
+            //TODO implementare command
+
             // Imposta i filtri solo se attivi
 
             BuildFiltroPredicato builder = new BuildFiltroPredicato(filtro);

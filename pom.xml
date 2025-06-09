@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -25,7 +25,7 @@
             <version>${gson.version}</version>
         </dependency>
 
-        <!-- JUnit 5 -->
+        <!-- JUnit 5 API -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -33,6 +33,7 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- JUnit 5 Engine -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
@@ -59,6 +60,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.1.2</version>
             </plugin>
+
             <!-- Plugin per generare un JAR eseguibile con tutte le dipendenze -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -67,7 +69,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>io.stefano.GUI.Applicazione</mainClass> <!-- ← Modifica con il tuo fully qualified main class name -->
+                            <mainClass>io.stefano.GUI.Applicazione</mainClass> <!-- Modifica con la tua classe principale -->
                         </manifest>
                     </archive>
                     <descriptorRefs>

@@ -1,11 +1,11 @@
-package test;
-
-import main.*;
+import io.stefano.Libreria;
+import io.stefano.LibreriaConcreta;
+import io.stefano.Libro;
+import io.stefano.implementazioni.LibreriaJSON;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -17,7 +17,8 @@ public class LibreriaTest {
 
     @BeforeEach
     void setUp() {
-        libreria = new LibreriaConcreta();
+        libreria = new LibreriaConcreta(LibreriaJSON.INSTANCE);
+        libreria.getLibri();
     }
 
 

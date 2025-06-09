@@ -4,7 +4,7 @@ import io.stefano.Libro;
 
 public class FiltroGenere implements Filtro{
     private Libro.Genere genere;
-    protected FiltroGenere(Libro.Genere genere){
+    public FiltroGenere(Libro.Genere genere){
         this.genere = genere;
     }
     @Override

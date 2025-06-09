@@ -2,7 +2,9 @@ package io.stefano.filtri;
 
 import io.stefano.Libro;
 
-public class BuildFiltroPredicato implements BuildFiltro { //TODO gestire le eccezioni
+public class BuildFiltroPredicato implements BuildFiltro {
+
+    //TODO gestire le eccezioni
     private Filtro filtro;
 
     public BuildFiltroPredicato() {

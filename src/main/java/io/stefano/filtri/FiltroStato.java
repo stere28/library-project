@@ -4,7 +4,7 @@ import io.stefano.Libro;
 
 public class FiltroStato implements Filtro{
     private Libro.Stato stato;
-    protected FiltroStato(Libro.Stato stato){
+    public FiltroStato(Libro.Stato stato){
         this.stato = stato;
     }
     @Override
