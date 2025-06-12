@@ -7,7 +7,7 @@ import io.stefano.Libreria;
  * Comando che aggiorna la vista dei libri (JList) nella GUI.
  * Non è annullabile.
  */
-public class CaricaLibreriaCommand implements Command {
+public class CaricaLibreriaCommand implements Command, Cloneable {
 
     private final Applicazione applicazione;
     private final Libreria libreria;
@@ -17,6 +17,7 @@ public class CaricaLibreriaCommand implements Command {
         this.libreria = libreria;
     }
 
+
     @Override
     public boolean doIt() {
         applicazione.aggiornaListaLibri(libreria.getLibri());
@@ -25,7 +26,15 @@ public class CaricaLibreriaCommand implements Command {
 
     @Override
     public boolean undoIt() {
-        // non si può annullare
         return false;
+    }
+
+    @Override
+    public CaricaLibreriaCommand clone() {
+        try {
+            return (CaricaLibreriaCommand) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError("Clone not supported", e);
+        }
     }
 }

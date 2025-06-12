@@ -12,7 +12,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class BookDetailDialog extends JDialog {
-    private final Libreria libreria;
     private final HistoryCommandHandler handler;
     private final Libro libroOriginale;
 
@@ -22,12 +21,16 @@ public class BookDetailDialog extends JDialog {
     private final JComboBox<Integer> valutazioneCombo;
     private final JComboBox<Libro.Genere> genereCombo;
     private final JComboBox<Libro.Stato> statoCombo;
+    private final EditBookCommand editBookCommand;
+    private final RemoveBookCommand removeBookCommand;
 
-    public BookDetailDialog(Applicazione applicazione, HistoryCommandHandler handler, Libreria libreria, Libro libro) {
+    public BookDetailDialog(Applicazione applicazione, HistoryCommandHandler handler, Libro libro,
+                            EditBookCommand editBookCommand, RemoveBookCommand removeBookCommand) {
         super(applicazione, "Dettagli Libro", true);
-        this.libreria = libreria;
         this.handler = handler;
         this.libroOriginale = libro;
+        this.editBookCommand = editBookCommand.clone();
+        this.removeBookCommand = removeBookCommand.clone();
 
         setSize(400, 400);
         setLocationRelativeTo(applicazione);
@@ -96,7 +99,10 @@ public class BookDetailDialog extends JDialog {
                         (Libro.Genere) genereCombo.getSelectedItem(),
                         (int) valutazioneCombo.getSelectedItem(),
                         (Libro.Stato) statoCombo.getSelectedItem());
-                handler.handle(new EditBookCommand(applicazione,libreria,libroOriginale,libroModificato));
+                EditBookCommand cmd = editBookCommand.clone();
+                cmd.setLibroNuovo(libroModificato);
+                cmd.setLibroOriginale(libroOriginale);
+                handler.handle(cmd);
             }catch (IllegalArgumentException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Errore di validazione", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -104,7 +110,9 @@ public class BookDetailDialog extends JDialog {
             dispose();
         });
         deleteButton.addActionListener(e -> {
-            handler.handle(new RemoveBookCommand(applicazione,libreria, libroOriginale));
+            RemoveBookCommand cmd = removeBookCommand.clone();
+            cmd.setLibro(libroOriginale);
+            handler.handle(cmd);
             dispose();});
         cancelButton.addActionListener(e -> dispose());
         setVisible(true);

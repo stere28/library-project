@@ -20,15 +20,15 @@ public final class AddBookDialog extends JDialog implements ActionListener {
     private final JSpinner valutazioneSpinner;
     private final JComboBox<Libro.Stato> statoCombo;
     private final CommandHandler hadler;
-    private final Libreria libreria ;
-    private final Applicazione app;
-    public AddBookDialog(Applicazione app, CommandHandler handler, Libreria libreria){
+    private final Applicazione applicazione;
+    private final AddBookCommand addBookCommand;
+    public AddBookDialog(Applicazione applicazione, CommandHandler handler, AddBookCommand addBookCommand){
 
-        super(app,"Aggiungi Nuovo Libro");
+        super(applicazione,"Aggiungi Nuovo Libro");
         setLayout(new GridLayout(0, 2, 5, 5));
         this.hadler = handler;
-        this.libreria = libreria;
-        this.app = app;
+        this.addBookCommand = addBookCommand.clone();
+        this.applicazione = applicazione;
 
         // Componenti del form
         isbnField = new JTextField();
@@ -83,8 +83,9 @@ public final class AddBookDialog extends JDialog implements ActionListener {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Errore di validazione", JOptionPane.ERROR_MESSAGE);
             return;
         }
-
-        hadler.handle(new AddBookCommand(libreria, nuovoLibro, app));
+        AddBookCommand cmd = addBookCommand.clone();
+        cmd.setLibro(nuovoLibro);
+        hadler.handle(cmd);
         dispose();
     }
 

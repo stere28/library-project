@@ -7,4 +7,8 @@ public class NessunFiltro implements Filtro{
     public boolean test(Libro libro) {
         return true;
     }
+
+    @Override
+    public void setNext(Filtro next) {
+    }
 }
