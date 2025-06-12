@@ -12,15 +12,17 @@ import java.util.Objects;
 
 public class LibreriaConcreta implements Libreria {
     private LibreriaPersistente implementazione;
-    private ComparatoreLibri comparatore = new ComparatoreTitolo();
-    private Filtro filtro = new NessunFiltro();
+    private ComparatoreLibri comparatoreLibri;
+    private Filtro filtro;
 
     public LibreriaConcreta(LibreriaPersistente implementazione) {
         this.implementazione = Objects.requireNonNull(implementazione, "L'implementazione non può essere null");
+        filtro = new NessunFiltro();
+        comparatoreLibri = new ComparatoreTitolo();
     }
     @Override
     public List<Libro> getLibri() {
-        return implementazione.caricaLibreria(filtro,comparatore);
+        return implementazione.caricaLibreria(filtro,comparatoreLibri);
     }
 
     @Override
@@ -39,7 +41,7 @@ public class LibreriaConcreta implements Libreria {
 
     @Override
     public void setOrdine(ComparatoreLibri comparatore) {
-        this.comparatore = comparatore;
+        this.comparatoreLibri = comparatore;
     }
 
     @Override

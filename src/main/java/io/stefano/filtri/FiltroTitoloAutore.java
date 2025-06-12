@@ -4,6 +4,7 @@ import io.stefano.Libro;
 
 public class FiltroTitoloAutore implements Filtro {
     private final String testo;
+    private Filtro next = new NessunFiltro();
 
     public FiltroTitoloAutore(String testo) {
         this.testo = testo.toLowerCase();
@@ -18,6 +19,11 @@ public class FiltroTitoloAutore implements Filtro {
         boolean matchAutore = libro.getAutori().stream()
                 .anyMatch(autore -> autore.toLowerCase().contains(testo));
 
-        return matchTitolo || matchAutore;
+        if(! matchTitolo && ! matchAutore) return false;
+        return next.test(libro);
+    }
+    @Override
+    public void setNext(Filtro next) {
+        this.next = next;
     }
 }

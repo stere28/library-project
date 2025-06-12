@@ -3,6 +3,7 @@ package io.stefano.GUI;
 import io.stefano.GUI.commandLibrary.CaricaLibreriaCommand;
 import io.stefano.GUI.commandLibrary.HistoryCommandHandler;
 import io.stefano.GUI.commandLibrary.NaiveCommandHandler;
+import io.stefano.InizializzaAmbienteDiLavoro;
 import io.stefano.LibreriaConcreta;
 import io.stefano.Libro;
 import io.stefano.Libreria;
@@ -13,15 +14,13 @@ import java.awt.*;
 import java.util.List;
 
 public final class Applicazione extends JFrame {
-    private final Libreria libreria;
     private final HistoryCommandHandler historyCommandHandler;
-    private final NaiveCommandHandler naiveCommandHandler = new NaiveCommandHandler();
+    private final NaiveCommandHandler naiveCommandHandler;
     private final JPanel campiDiRicerca;
     private final BarraInferiore barraInferiore;
     private final JList<Libro> bookListPanel;
-    DefaultListModel<Libro> model = new DefaultListModel<>();
-
-
+    private DefaultListModel<Libro> model = new DefaultListModel<>();
+    private final InizializzaAmbienteDiLavoro ambienteDiLavoro ;
     public static void main(String[] args) {
         new Applicazione();
     }
@@ -35,21 +34,22 @@ public final class Applicazione extends JFrame {
         setLayout(new BorderLayout());
         setVisible(true);
 
-        this.libreria = new LibreriaConcreta(LibreriaJSON.INSTANCE);
+        naiveCommandHandler = new NaiveCommandHandler();
+        ambienteDiLavoro = new InizializzaAmbienteDiLavoro(this);
         this.historyCommandHandler = new HistoryCommandHandler();
 
         //BARRA INFERIORE
         barraInferiore = new BarraInferiore();
 
         //RICERCA
-        campiDiRicerca = new Search(this,libreria);
+        campiDiRicerca = new Search(this,ambienteDiLavoro.getSearchBookCommand());
 
         //VISTA LIBRI
         bookListPanel = new JList<>();
         bookListPanel.setCellRenderer(new BookCellRenderer());
         bookListPanel.setFixedCellHeight(70);
 
-        naiveCommandHandler.handle(new CaricaLibreriaCommand(this,libreria));
+        naiveCommandHandler.handle(ambienteDiLavoro.getCaricaLibreriaCommand());
 
         bookListPanel.setModel(model);
 
@@ -57,7 +57,8 @@ public final class Applicazione extends JFrame {
             boolean hasSelection = !bookListPanel.isSelectionEmpty();
             if(hasSelection) {
                 Libro selected = bookListPanel.getSelectedValue();
-                new BookDetailDialog(this, historyCommandHandler, libreria, selected);
+                new BookDetailDialog(this, historyCommandHandler, selected,
+                        ambienteDiLavoro.getEditBookCommand(),ambienteDiLavoro.getRemoveBookCommand());
             }
         });
 
@@ -81,10 +82,11 @@ public final class Applicazione extends JFrame {
             add(redoButt);
             add(reload);
 
-            addBook.addActionListener(e -> new AddBookDialog(Applicazione.this, historyCommandHandler, libreria));
+            addBook.addActionListener(e -> new AddBookDialog(Applicazione.this, historyCommandHandler,
+                    ambienteDiLavoro.getAddBookCommand()));
             undoButt.addActionListener(historyCommandHandler);
             redoButt.addActionListener(historyCommandHandler);
-            reload.addActionListener(e -> {naiveCommandHandler.handle(new CaricaLibreriaCommand(Applicazione.this,libreria));});
+            reload.addActionListener(e -> {naiveCommandHandler.handle(ambienteDiLavoro.getCaricaLibreriaCommand());});
         }
     }
     private class BookCellRenderer extends JPanel implements ListCellRenderer<Libro> {

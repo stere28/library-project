@@ -12,6 +12,7 @@ import io.stefano.comparatore.ComparatoreValutazione;
 import io.stefano.filtri.BuildFiltro;
 import io.stefano.filtri.BuildFiltroPredicato;
 import io.stefano.filtri.Filtro;
+import io.stefano.filtri.NessunFiltro;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,10 +20,10 @@ import java.awt.*;
 public class Search extends JPanel {
     private final CommandHandler handler;
     private final Applicazione app;
-    private final Libreria libreria;
-    private Filtro filtro = new BuildFiltroPredicato().getFiltro();
-    private ComparatoreLibri comparatore = new ComparatoreTitolo();
+    private Filtro filtro;
+    private ComparatoreLibri comparatore;
     private boolean reverse = false;
+    private final SearchBookCommand searchBookCommand;
 
     private JTextField searchField;
     private JComboBox<String> ordinamentoCombo;
@@ -30,12 +31,14 @@ public class Search extends JPanel {
     private JButton searchButton;
     private JButton reverseButton;
 
-    public Search(Applicazione app, Libreria libreria) {
+    public Search(Applicazione app, SearchBookCommand searchBookCommand) {
         super();
-
-        handler = new NaiveCommandHandler();
+        this.filtro = new NessunFiltro();
+        this.comparatore = new ComparatoreTitolo();
+        this.handler = new NaiveCommandHandler();
         this.app = app;
-        this.libreria = libreria;
+        this.searchBookCommand = searchBookCommand.clone();
+
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -70,7 +73,11 @@ public class Search extends JPanel {
             String searchText = searchField.getText().trim();
             if(!searchText.equals("")) builder.addPerText(searchText);
             filtro = builder.getFiltro();
-            handler.handle(new SearchBookCommand(libreria, app, filtro, comparatore, reverse));
+            SearchBookCommand cmd = searchBookCommand.clone();
+            cmd.setComparatore(comparatore);
+            cmd.setReverse(reverse);
+            cmd.setFiltro(filtro);
+            handler.handle(cmd);
          });
 
         ordinamentoCombo.addActionListener((e)->{
@@ -88,11 +95,20 @@ public class Search extends JPanel {
                     comparatore = new ComparatoreTitolo();
             }
             if(reverse) comparatore = comparatore.reversed();
-            handler.handle(new SearchBookCommand(libreria, app, filtro, comparatore, reverse));
+            SearchBookCommand cmd = searchBookCommand.clone();
+            cmd.setComparatore(comparatore);
+            cmd.setReverse(reverse);
+            cmd.setFiltro(filtro);
+            handler.handle(cmd);
         });
         reverseButton.addActionListener((e)->{
             reverse =  !reverse;
-            handler.handle(new SearchBookCommand(libreria, app, filtro, comparatore, reverse));});
+            SearchBookCommand cmd = searchBookCommand.clone();
+            cmd.setComparatore(comparatore);
+            cmd.setReverse(reverse);
+            cmd.setFiltro(filtro);
+            handler.handle(cmd);
+        });
     }
 
     private void mostraFinestraFiltri() {
@@ -155,7 +171,11 @@ public class Search extends JPanel {
             }
 
             filtriDialog.dispose();
-            handler.handle(new SearchBookCommand(libreria, app, builder.getFiltro(),comparatore,reverse));
+            SearchBookCommand cmd = searchBookCommand.clone();
+            cmd.setComparatore(comparatore);
+            cmd.setReverse(reverse);
+            cmd.setFiltro(builder.getFiltro());
+            handler.handle(cmd);
         });
 
         filtriDialog.add(new JLabel()); // spazio vuoto

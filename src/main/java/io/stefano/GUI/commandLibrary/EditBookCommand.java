@@ -4,7 +4,7 @@ import io.stefano.GUI.Applicazione;
 import io.stefano.Libreria;
 import io.stefano.Libro;
 
-public class EditBookCommand implements Command{
+public class EditBookCommand implements Command, Cloneable{
     private final Applicazione applicazione;
     private final Libreria libreria;
     private Libro libroOriginale;
@@ -14,6 +14,19 @@ public class EditBookCommand implements Command{
         this.applicazione = applicazione;
         this.libreria = libreria;
         this.libroOriginale = libroOriginale;
+        this.libroNuovo = libroNuovo;
+    }
+
+    public EditBookCommand(Applicazione applicazione, Libreria libreria) {
+        this.applicazione = applicazione;
+        this.libreria = libreria;
+    }
+
+    public void setLibroOriginale(Libro libroOriginale) {
+        this.libroOriginale = libroOriginale;
+    }
+
+    public void setLibroNuovo(Libro libroNuovo) {
         this.libroNuovo = libroNuovo;
     }
 
@@ -31,5 +44,13 @@ public class EditBookCommand implements Command{
         libreria.aggiungiLibro(libroOriginale);
         new CaricaLibreriaCommand(applicazione,libreria).doIt();
         return true;
+    }
+
+    @Override
+    public EditBookCommand clone()  {
+        try {
+            return (EditBookCommand) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError("Clone not supported", e);        }
     }
 }

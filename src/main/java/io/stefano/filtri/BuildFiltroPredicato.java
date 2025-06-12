@@ -15,25 +15,29 @@ public class BuildFiltroPredicato implements BuildFiltro { //TODO gestire le ecc
     @Override
     public void addPerGenere(Libro.Genere genere) {
         Filtro filtroGenere = new FiltroGenere(genere);
-        filtro =  filtroGenere.and(filtro);
+        filtroGenere.setNext(filtro);
+        filtro = filtroGenere ;
     }
 
     @Override
     public void addPerStato(Libro.Stato stato) {
         Filtro filtroStato = new FiltroStato(stato);
-        filtro = filtroStato.and(filtro);
+        filtroStato.setNext(filtro);
+        filtro = filtroStato;
     }
 
     @Override
     public void addPerText(String text) {
         Filtro filtroText = new FiltroTitoloAutore(text);
-        filtro = filtroText.and(filtro);
+        filtroText.setNext(filtro);
+        filtro = filtroText;
     }
 
     @Override
     public void addPerValutazione(int min, int max) {
         Filtro filtroValutazione = new FiltroValutazione(min, max);
-        filtro = filtroValutazione.and(filtro);
+        filtroValutazione.setNext(filtro);
+        filtro = filtroValutazione;
     }
 
     @Override
