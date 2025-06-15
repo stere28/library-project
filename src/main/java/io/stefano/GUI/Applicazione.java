@@ -13,7 +13,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-public final class Applicazione extends JFrame {
+public class Applicazione extends JFrame {
     private final HistoryCommandHandler historyCommandHandler;
     private final NaiveCommandHandler naiveCommandHandler;
     private final JPanel campiDiRicerca;
